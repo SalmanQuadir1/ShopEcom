@@ -1,4 +1,5 @@
 import axios from "axios"
+import { useSelector } from "react-redux"
 import {
     LOGIN_FAIL,
     LOGIN_REQUEST,
@@ -23,6 +24,7 @@ export const login = (email, password) => async (dispatch) => {
             }
         }
         const { data } = await axios.post('http://localhost:8089/api/authenticate', { email, password }, config);
+        sessionStorage.setItem('LoginUser', JSON.stringify(data));
         dispatch({
             type: LOGIN_SUCCESS,
             payload: data.user
@@ -60,31 +62,33 @@ export const register = (userData) => async (dispatch) => {
 
 //Load User
 export const loadUser = () => async (dispatch) => {
+   
     try {
         dispatch({ type: LOAD_USER_REQUEST })
 
-        const { data } = await axios.post('http://localhost:8089/api/register');
+        //const { data } = await axios.post('http://localhost:8089/api/register');
         dispatch({
             type: LOAD_USER_SUCCESS,
-            payload: data.user
+            payload: JSON.parse(sessionStorage.getItem('LoginUser')).user
         })
 
     } catch (error) {
         dispatch({
             type: LOAD_USER_FAIL,
-            payload: error.response.data.message
+            payload: error.response
         })
     }
 }
 //LOGOUT 
 export const logout = () => async (dispatch) => {
     try {
-       
-         await axios.post('http://localhost:8089/api/logout');
+
+        await axios.post('http://localhost:8089/api/logout');
         dispatch({
             type: LOGOUT_SUCCESS,
-        
+
         })
+        sessionStorage.removeItem('LoginUser')
 
     } catch (error) {
         dispatch({
