@@ -6,6 +6,16 @@ export const addItemsToCart = (id, quantity) => async (dispatch, getState) => {
     const { data } = await axios.get(`http://localhost:8089/product/findProduct/${id}`)
 
     console.log("additemstocart", id, quantity, data)
+    // const addtoCart = {
+    //     id: data.id,
+    //     name: data.productName,
+    //     price: data.price,
+    //     image: data.images[0].image,
+    //     quantity
+
+    // }
+    //  const { resp } = await axios.post(`http://localhost:8089/cart`, addtoCart)
+
 
     dispatch({
         type: ADD_TO_CART,

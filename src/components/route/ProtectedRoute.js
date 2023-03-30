@@ -3,20 +3,19 @@ import { useSelector } from 'react-redux'
 import { Route, Navigate, Routes, useNavigate } from 'react-router-dom'
 
 
-const ProtectedRoute = (props) => {
-    const { Component } = props;
+const ProtectedRoute = ({ isAdmin, ...rest }) => {
+    const { Component } = rest;
     const navigate = useNavigate();
     const { user, isAuthenticated, loading } = useSelector(state => state.auth);
 
     if (isAuthenticated) {
+        
+        if (isAdmin === true && user.role !== 'ADMIN') {
+            return navigate('/')
+        }
 
-        // if (user && user.role === 'ADMIN') {
-        //     return <div>
-        //         <Component />
-        //     </div>
-        // } else {
         return <div>
-            <Component {...props}/>
+            <Component {...rest} />
         </div>
 
     }

@@ -10,6 +10,7 @@ import {
 } from "../constants/orderConstants";
 
 export const createOrder = (order) => async (dispatch, getState) => {
+    console.log("createOrder",order)
     try {
         dispatch({ type: CREATE_ORDER_REQUEST })
         const config = {
@@ -17,7 +18,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
                 'Content-Type': 'application/json'
             }
         }
-        const { data } = await axios.post('/orders', order, config);
+        const { data } = await axios.post('/orders/checkoutOrders', order, config);
         dispatch({
             type: CREATE_ORDER_SUCCESS,
             payload: data

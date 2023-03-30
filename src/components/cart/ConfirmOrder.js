@@ -44,8 +44,8 @@ const ConfirmOrder = () => {
                     {cartItems.map(item => (
 
                         <>
-                            <hr />
-                            <div className="cart-item my-1 " key={item.id}>
+                            <hr  key={item.id}/>
+                            <div className="cart-item my-1 " >
                                 <div className="row">
                                     <div className="col-4 col-lg-2">
                                         <img src={`data:image/png;base64,${item.image} `} alt={item.name} height="45" width="65" />

@@ -103,7 +103,7 @@ const Payment = () => {
         } catch (error) {
 
             document.querySelector('#pay_btn').disabled = false;
-            alert.error(error.response.data)
+            alert.error(error.response)
 
         }
 
@@ -137,7 +137,7 @@ const Payment = () => {
 
 
                         <button id="pay_btn" type="submit" className="btn btn-block py-3">
-                            Pay {`- ${orderInfo && orderInfo.totalPrice}`}
+                            Pay - &#8377;{`${orderInfo && orderInfo.totalPrice}`}
                         </button>
 
                     </form>

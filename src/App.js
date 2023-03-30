@@ -20,6 +20,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import Payment from './components/cart/Payment';
 import OrderSuccess from './components/cart/OrderSuccess';
 import ListOrders from './components/order/ListOrders';
+import Dashboard from './components/admin/Dashboard';
 
 const ApiKey = "pk_test_51MqZeDSDgpDtZZvuQAj3Hrxw4sqbsQb63UGMNbI5PLr8qVf4KZlQicvroBw2urAOdOHuDtOOcYNg5f5AeDRJ4wNF009Ts079Qa";
 function App() {
@@ -50,6 +51,7 @@ function App() {
             <Route path='/order/listOrders' element={<ProtectedRoute Component={ListOrders}></ProtectedRoute>}></Route>
 
 
+
             {stripeApiKey && (
               <Route exact path="/payment" element={stripeApiKey &&
                 <Elements stripe={loadStripe(stripeApiKey)}>
@@ -62,6 +64,11 @@ function App() {
           </Routes>
 
         </div>
+        <Routes>
+
+          <Route path='/dashboard' element={<ProtectedRoute isAdmin={true} Component={Dashboard}></ProtectedRoute>}></Route>
+        </Routes>
+
         <Footer />
       </div>
     </Router>
