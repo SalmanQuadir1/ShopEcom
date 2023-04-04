@@ -21,6 +21,8 @@ import Payment from './components/cart/Payment';
 import OrderSuccess from './components/cart/OrderSuccess';
 import ListOrders from './components/order/ListOrders';
 import Dashboard from './components/admin/Dashboard';
+import ProductsList from './components/admin/ProductsList';
+import NewProduct from './components/admin/NewProduct';
 
 const ApiKey = "pk_test_51MqZeDSDgpDtZZvuQAj3Hrxw4sqbsQb63UGMNbI5PLr8qVf4KZlQicvroBw2urAOdOHuDtOOcYNg5f5AeDRJ4wNF009Ts079Qa";
 function App() {
@@ -67,6 +69,8 @@ function App() {
         <Routes>
 
           <Route path='/dashboard' element={<ProtectedRoute isAdmin={true} Component={Dashboard}></ProtectedRoute>}></Route>
+          <Route path='/admin/products' element={<ProtectedRoute isAdmin={true} Component={ProductsList}></ProtectedRoute>}></Route>
+          <Route path='/admin/product' element={<ProtectedRoute isAdmin={true} Component={NewProduct}></ProtectedRoute>}></Route>
         </Routes>
 
         <Footer />
