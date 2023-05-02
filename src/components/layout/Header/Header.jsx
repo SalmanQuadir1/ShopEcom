@@ -1,6 +1,6 @@
 import React from 'react'
 import Search from '../Search'
-import { Link, Route, Routes } from 'react-router-dom'
+import { Link} from 'react-router-dom'
 import { useAlert } from 'react-alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../actions/userActions';
@@ -41,12 +41,12 @@ const Header = () => {
               <Link to='#' className='btn dropdown-toggle text-white' type="button" id="dropDownMenuButton"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <figure className="avatar avatar-nav">
-                  <img src='/images/User-avatar.svg.png' alt="user" className='rounded-circle bg-white' />
+                  <img src={user.avatar && user.avatar[0].url} alt="user" className='rounded-circle bg-white' />
                 </figure>
-                <span>{user && user.firstName}</span>
+                <span>{user && user.name}</span>
               </Link>
               <div className="dropdown-menu" aria-labelledby='dropDownMenuButton'>
-                {user && user.role === 'ADMIN' && (
+                {user && user.role === 'admin' && (
 
                   <Link className='dropdown-item ' to={'/dashboard'}>Dashboard</Link>
 

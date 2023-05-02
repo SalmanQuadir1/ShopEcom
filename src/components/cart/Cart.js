@@ -7,10 +7,10 @@ import MetaData from '../layout/MetaData'
 const Cart = () => {
 
     const dispatch = useDispatch();
-    const navigate =useNavigate();
+    const navigate = useNavigate();
 
     const { cartItems } = useSelector(state => state.cart)
-    const { isAuthenticated, loading, error } = useSelector(state => state.auth);
+    const { isAuthenticated } = useSelector(state => state.auth);
 
     console.log("cart", cartItems);
 
@@ -31,9 +31,9 @@ const Cart = () => {
         dispatch(addItemsToCart(id, newQty))
     }
     const checkoutHandler = () => {
-        if(isAuthenticated){
+        if (isAuthenticated) {
             navigate('/shipping')
-        }else{
+        } else {
             navigate('/login')
         }
     }
@@ -59,7 +59,7 @@ const Cart = () => {
                                     <div className="cart-item" key={item.id}>
                                         <div className="row">
                                             <div className="col-4 col-lg-3">
-                                                <img src={`data:image/png;base64,${item.image} `} alt={item.name} height="90" width="115" />
+                                                <img src={item.image} alt={item.name} height="90" width="115" />
                                             </div>
 
                                             <div className="col-5 col-lg-3">

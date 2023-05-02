@@ -7,6 +7,7 @@ import CheckoutSteps from './CheckoutSteps';
 import { useStripe, useElements, CardNumberElement, CardExpiryElement, CardCvcElement } from '@stripe/react-stripe-js'
 import { useNavigate } from 'react-router-dom';
 import { createOrder, clearErrors } from '../../actions/orderActions';
+import { removeItemsFromCart } from '../../actions/cartActions';
 
 const options = {
 
@@ -33,6 +34,7 @@ const Payment = () => {
 
     useEffect(() => {
         if (error) {
+            console.log(error);
             alert.error(error)
             dispatch(clearErrors())
         }
@@ -43,6 +45,7 @@ const Payment = () => {
         shippingInfo
     }
     const orderInfo = JSON.parse(sessionStorage.getItem('orderInfo'));
+    
     if (orderInfo) {
         order.itemsPrice = orderInfo.itemsPrice
         order.shippingPrice = orderInfo.shippingPrice
@@ -67,7 +70,7 @@ const Payment = () => {
 
                 }
             }
-            res = await axios.post('http://localhost:8089/payment/charge', paymentData, config)
+            res = await axios.post('/api/v1/payment/process', paymentData, config)
             const clientSecret = res.data.client_secret
 
             if (!stripe || !elements) {
@@ -89,12 +92,15 @@ const Payment = () => {
             } else {
                 if (result.paymentIntent.status === 'succeeded') {
                     order.paymentInfo = {
-                        id:result.paymentIntent.id,
-                        status:result.paymentIntent.status
+                        id: result.paymentIntent.id,
+                        status: result.paymentIntent.status
                     }
                     dispatch(createOrder(order))
+                    for (let i = 0; i < order.orderItems.length; i++) {
+                       dispatch( removeItemsFromCart(order.orderItems[i].id));
+                    }
 
-                    navigate('/success')
+                    navigate('/order/success')
                 } else {
                     alert.error('There is some issue while payment processing ')
                 }
@@ -137,7 +143,7 @@ const Payment = () => {
 
 
                         <button id="pay_btn" type="submit" className="btn btn-block py-3">
-                            Pay - &#8377;{`${orderInfo && orderInfo.totalPrice}`}
+                            Pay - ₹{`${orderInfo && orderInfo.totalPrice}`}
                         </button>
 
                     </form>

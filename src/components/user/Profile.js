@@ -16,7 +16,7 @@ const Profile = () => {
                     <div className="row justify-content-around mt-5 user-info">
                         <div className="col-12 col-md-3">
                             <figure className='avatar avatar-profile'>
-                                <img className="rounded-circle img-fluid" src='/images/logo.png' alt={user.firstName} />
+                                <img className="rounded-circle img-fluid" src={user && user.avatar[0].url} alt={user.name} />
                             </figure>
                             <Link to="/me/update" id="edit_profile" className="btn btn-primary btn-block my-5">
                                 Edit Profile
@@ -25,7 +25,7 @@ const Profile = () => {
 
                         <div className="col-12 col-md-5">
                             <h4>Full Name</h4>
-                            <p>{user.firstName} {user.lastName}</p>
+                            <p>{user.name} </p>
 
                             <h4>Email Address</h4>
                             <p>{user.email}</p>
@@ -33,7 +33,7 @@ const Profile = () => {
                             <h4>Created Date</h4>
                             <p>20-01-2023</p>
 
-                            {user.role !== "ADMIN" && (
+                            {user.role !== "admin" && (
                                 <Link to="/orders/me" className="btn btn-danger btn-block mt-5">
                                     My Orders
                                 </Link>

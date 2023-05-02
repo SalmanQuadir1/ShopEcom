@@ -11,6 +11,8 @@ const options = {
   position: positions.BOTTOM_CENTER,
   transition: transitions.SCALE
 }
+document.addEventListener('contextmenu', event => event.preventDefault());
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

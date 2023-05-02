@@ -22,14 +22,30 @@ import OrderSuccess from './components/cart/OrderSuccess';
 import ListOrders from './components/order/ListOrders';
 import Dashboard from './components/admin/Dashboard';
 import ProductsList from './components/admin/ProductsList';
+import OrdersList from './components/admin/OrdersList';
 import NewProduct from './components/admin/NewProduct';
+import UpdateProfile from './components/user/UpdateProfile';
+import UpdatePassword from './components/user/UpdatePassword';
+import axios from 'axios';
+import UpdateProduct from './components/admin/UpdateProduct';
+import UsersList from './components/admin/UsersList';
 
-const ApiKey = "pk_test_51MqZeDSDgpDtZZvuQAj3Hrxw4sqbsQb63UGMNbI5PLr8qVf4KZlQicvroBw2urAOdOHuDtOOcYNg5f5AeDRJ4wNF009Ts079Qa";
 function App() {
-  const [stripeApiKey, setStripeApiKey] = useState(ApiKey);
+  const [stripeApiKey, setStripeApiKey] = useState('');
+
 
   useEffect(() => {
-    store.dispatch(loadUser())
+
+    //store.dispatch(loadUser())
+
+    async function getStripeApiKey() {
+
+      const { data } = await axios.get('/api/v1/stripeapi');
+      setStripeApiKey(data.stripeApiKey);
+
+    }
+    getStripeApiKey();
+
   }, [])
 
   return (
@@ -47,15 +63,17 @@ function App() {
             <Route exact path='/register' Component={Register} />
 
             <Route path='/me' element={<ProtectedRoute Component={Profile}></ProtectedRoute>}></Route>
+            <Route path='/password/update' element={<ProtectedRoute Component={UpdatePassword}></ProtectedRoute>}></Route>
+            <Route path='/me/update' element={<ProtectedRoute Component={UpdateProfile}></ProtectedRoute>}></Route>
             <Route path='/shipping' element={<ProtectedRoute Component={Shipping}></ProtectedRoute>}></Route>
             <Route path='/order/confirm' element={<ProtectedRoute Component={ConfirmOrder}></ProtectedRoute>}></Route>
             <Route path='/order/success' element={<ProtectedRoute Component={OrderSuccess}></ProtectedRoute>}></Route>
-            <Route path='/order/listOrders' element={<ProtectedRoute Component={ListOrders}></ProtectedRoute>}></Route>
+            <Route path='/orders/me' element={<ProtectedRoute Component={ListOrders}></ProtectedRoute>}></Route>
 
 
 
             {stripeApiKey && (
-              <Route exact path="/payment" element={stripeApiKey &&
+              <Route exact path='/payment' element={stripeApiKey &&
                 <Elements stripe={loadStripe(stripeApiKey)}>
                   <ProtectedRoute Component={Payment}></ProtectedRoute>
                 </Elements>}
@@ -67,13 +85,18 @@ function App() {
 
         </div>
         <Routes>
-
           <Route path='/dashboard' element={<ProtectedRoute isAdmin={true} Component={Dashboard}></ProtectedRoute>}></Route>
           <Route path='/admin/products' element={<ProtectedRoute isAdmin={true} Component={ProductsList}></ProtectedRoute>}></Route>
+          <Route path='/admin/product/:id' element={<ProtectedRoute isAdmin={true} Component={UpdateProduct}></ProtectedRoute>}></Route>
           <Route path='/admin/product' element={<ProtectedRoute isAdmin={true} Component={NewProduct}></ProtectedRoute>}></Route>
+          <Route path='/admin/orders' element={<ProtectedRoute isAdmin={true} Component={OrdersList}></ProtectedRoute>}></Route>
+          <Route path='/admin/users' element={<ProtectedRoute isAdmin={true} Component={UsersList}></ProtectedRoute>}></Route>
         </Routes>
 
-        <Footer />
+      {/* {!loading && user.role !== 'admin ' && ( */}
+
+          <Footer />
+        {/* )} */}
       </div>
     </Router>
   );

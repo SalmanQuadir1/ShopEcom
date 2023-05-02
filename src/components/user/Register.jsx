@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { useAlert } from 'react-alert'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { clearErrors } from '../../actions/productActions';
-import { login, register } from '../../actions/userActions';
-import Loader from '../layout/Loader';
+import {  register } from '../../actions/userActions';
 import MetaData from '../layout/MetaData';
 
 const Register = () => {
 
     const [user, setUser] = useState({
-        firstName: '',
-        lastName: '',
+        name: '',
         email: '',
         password: ''
     });
-    const { firstName, lastName,email, password } = user;
+    const { name, email, password } = user;
     const alert = useAlert();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -34,19 +32,19 @@ const Register = () => {
             alert.error(error);
             dispatch(clearErrors());
         }
-    }, [isAuthenticated, loading, error])
+    }, [isAuthenticated, loading, error, dispatch, alert, navigate])
 
     const submitHandler = (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.set('firstName', firstName);
-        formData.set('lastName', lastName);
+
+        formData.set('name', name);
         formData.set('email', email);
         formData.set('password', password);
         formData.set('avatar', avatar);
 
-        const responsee = dispatch(register(formData));
-        console.log(responsee);
+         dispatch(register(formData));
+        
 
     }
     const onChange = (e) => {
@@ -75,23 +73,15 @@ const Register = () => {
                         <h1 className="mb-3">Register</h1>
 
                         <div className="form-group">
-                            <label htmlFor="email_field">FirstName</label>
+                            <label htmlFor="email_field">Name</label>
                             <input type="text" id="name_field" className="form-control"
-                                name="firstName"
-                                value={firstName}
+                                name="name"
+                                value={name}
                                 onChange={onChange}
 
                             />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="email_field">LastName</label>
-                            <input type="text" id="name_field" className="form-control"
-                                name="lastName"
-                                value={lastName}
-                                onChange={onChange}
 
-                            />
-                        </div>
 
                         <div className="form-group">
                             <label htmlFor="email_field">Email</label>

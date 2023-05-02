@@ -2,17 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { useAlert } from 'react-alert';
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom';
-import { getProductDetails, clearErrors } from '../../actions/productActions'
+import { getProductDetails, clearErrors, newReview } from '../../actions/productActions'
 import Loader from '../layout/Loader';
 import { Carousel } from 'react-bootstrap'
 import { addItemsToCart } from '../../actions/cartActions'
+import { NEW_REVIEW_RESET } from '../../constants/productConstants';
+import ListReview from '../review/ListReview';
 const ProductDetails = () => {
     const { id } = useParams();
     const alert = useAlert();
+    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState('');
     const [quantity, setQuantity] = useState(1);
     const dispatch = useDispatch();
     const { loading, error, product } = useSelector((state) => state.productDetails);
-    console.log(product)
+    const { user } = useSelector((state) => state.auth);
+    const { error: reviewError, success } = useSelector((state) => state.newReview);
 
     useEffect(() => {
         dispatch(getProductDetails(id))
@@ -20,8 +25,18 @@ const ProductDetails = () => {
             alert.error(error);
             dispatch(clearErrors())
         }
+        if (reviewError) {
+            alert.error(reviewError);
+            dispatch(clearErrors())
+        }
+        if (success) {
+            alert.success('Review Posted Successfully');
+            dispatch({ type: NEW_REVIEW_RESET })
 
-    }, [dispatch, alert, error, id])
+
+        }
+
+    }, [dispatch, alert, error, reviewError, id, success])
 
     const decreaseQty = () => {
         const count = document.querySelector('.count');
@@ -45,9 +60,56 @@ const ProductDetails = () => {
     }
 
     const addToCart = () => {
-        
-        dispatch(addItemsToCart(id ,quantity))
+
+        dispatch(addItemsToCart(id, quantity))
         alert.success('Item Added to Cart')
+    }
+    const setUserStars = () => {
+        const stars = document.querySelectorAll('.star');
+        stars.forEach((star, index) => {
+            star.starValue = index + 1;
+            ['click', 'mouseover', 'mouseout'].forEach(function (e) {
+                star.addEventListener(e, showRatings)
+            })
+
+        })
+        function showRatings(e) {
+            stars.forEach((star, index) => {
+                if (e.type === 'click') {
+                    if (index < this.starValue) {
+                        star.classList.add('orange');
+                        setRating(this.starValue);
+                    } else {
+                        star.classList.remove('orange');
+
+                    }
+
+                }
+                if (e.type === 'mouseover') {
+                    if (index < this.starValue) {
+                        star.classList.add('yellow');
+                    } else {
+                        star.classList.remove('yellow');
+
+                    }
+
+                }
+                if (e.type === 'mouseout') {
+                    star.classList.remove('yellow');
+
+                }
+            })
+        }
+
+    }
+    const reviewHandler = () => {
+        const formData = new FormData();
+        formData.set('rating', rating);
+        formData.set('comment', comment);
+        formData.set('productId', id);
+        dispatch(newReview(formData))
+
+
     }
 
     return (
@@ -59,24 +121,24 @@ const ProductDetails = () => {
                         <div className="col-12 col-lg-5 img-fluid" id="product_image">
                             <Carousel pause='hover'>
                                 {product.images && product.images.map(img => (
-                                    <Carousel.Item key={img.id} interval={1000}>
+                                    <Carousel.Item key={img._id} interval={1000}>
 
-                                        <img src={`data:image/png;base64,${img.image} `} className='w-100 d-block' alt="sdf" height="500" />
+                                        <img src={img.url} className='w-100 d-block' alt="sdf" height="500" />
                                     </Carousel.Item>
                                 ))}
                             </Carousel>
                         </div>
 
                         <div className="col-12 col-lg-5 mt-5">
-                            <h3>{product.productName}</h3>
-                            <p id="product_id">{product.id}</p>
+                            <h3>{product.name}</h3>
+                            <p id="product_id">{product._id}</p>
 
                             <hr />
 
                             <div className="rating-outer">
-                                <div className="rating-inner"></div>
+                                <div className="rating-inner" ></div>
                             </div>
-                            <span id="no_of_reviews">(5 Reviews)</span>
+                            <span id="no_of_reviews">({product.reviews && product.reviews.length} Reviews)</span>
 
                             <hr />
 
@@ -92,18 +154,22 @@ const ProductDetails = () => {
 
                             <hr />
 
-                            <p>Status: <span id="stock_status" className={product.quantity > 0 ? 'greenColor' : 'redColor'} >{product.quantity > 0 ? 'In Stock' : 'Out Of Stock'}</span></p>
+                            <p>Status: <span id="stock_status" className={product.stock > 0 ? 'greenColor' : 'redColor'} >{product.stock > 0 ? 'In Stock' : 'Out Of Stock'}</span></p>
 
                             <hr />
 
                             <h4 className="mt-2">Description:</h4>
-                            <p>Binge on movies and TV episodes, news, sports, music and more! We insisted on 720p High Definition for this 32" LED TV, bringing out more lifelike color, texture and detail. We also partnered with Roku to bring you the best possible content with thousands of channels to choose from, conveniently presented through your own custom home screen.</p>
+                            <p>{product.description}</p>
                             <hr />
-                            <p id="product_seller mb-3">Sold by: <strong>Amazon</strong></p>
+                            <p id="product_seller mb-3">Sold by: <strong>{product.seller}</strong></p>
+                            {user ?
+                                <button id="review_btn" type="button" className="btn btn-primary mt-4" data-toggle="modal" data-target="#ratingModal" onClick={setUserStars}>
+                                    Submit Your Review
+                                </button>
+                                :
+                                <div className="alert alert-danger mt-5" type="alert">Login to Post Your Review</div>
 
-                            <button id="review_btn" type="button" className="btn btn-primary mt-4" data-toggle="modal" data-target="#ratingModal">
-                                Submit Your Review
-                            </button>
+                            }
 
                             <div className="row mt-2 mb-5">
                                 <div className="rating w-50">
@@ -127,11 +193,14 @@ const ProductDetails = () => {
                                                         <li className="star"><i className="fa fa-star"></i></li>
                                                     </ul>
 
-                                                    <textarea name="review" id="review" className="form-control mt-3">
+                                                    <textarea name="review" id="review" className="form-control mt-3"
+                                                        value={comment}
+                                                        onChange={(e) => setComment(e.target.value)}
+                                                    >
 
                                                     </textarea>
 
-                                                    <button className="btn my-3 float-right review-btn px-4 text-white" data-dismiss="modal" aria-label="Close">Submit</button>
+                                                    <button className="btn my-3 float-right review-btn px-4 text-white" onClick={reviewHandler} data-dismiss="modal" aria-label="Close">Submit</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -143,6 +212,10 @@ const ProductDetails = () => {
 
                         </div>
                     </div>
+                    {product.reviews && product.reviews.length > 0 && (
+                        <ListReview reviews={product.reviews} />
+                    )}
+
 
                 </>
             }

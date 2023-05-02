@@ -20,7 +20,7 @@ const ListOrders = () => {
             alert.error(error)
             dispatch(clearErrors());
         }
-    }, [dispatch, error, alert])
+    }, [dispatch, error, alert,])
 
     const setOrders = () => {
         const data = {
@@ -53,16 +53,16 @@ const ListOrders = () => {
             ],
             rows: []
         }
-        orders.forEach(order => {
+        orders && orders.forEach(order => {
             data.rows.push({
                 id: order._id,
-                numofItems: order.orderItems.length,
-                amount: `${order.totalPrice}`,
+                numOfItems: order.orderItems.length,
+                amount: `₹${order.totalPrice}`,
                 status: order.orderStatus && String(order.orderStatus).includes('Delivered') ?
                     <p style={{ color: 'green' }}>{order.orderStatus}</p>
                     : <p style={{ color: 'red' }}>{order.orderStatus}</p>,
                 actions:
-                    <Link to={`/orders/${order._id}`} className='btn btn-primary'><i className='fa fa-eye'></i></Link>
+                    <Link to={`/orders/${order._id}`} className=''><i className='fa fa-eye'></i></Link>
             })
 
         })
@@ -81,6 +81,7 @@ const ListOrders = () => {
                         bordered
                         striped
                         hover
+                        noBottomColumns={true}
                     />
                 </>
             )}

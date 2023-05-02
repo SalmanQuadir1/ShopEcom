@@ -26,11 +26,12 @@ const Login = () => {
             alert.error(error);
             dispatch(clearErrors());
         }
-    }, [isAuthenticated, loading, error])
+    }, [isAuthenticated, loading, error, alert, dispatch, navigate])
 
     const submitHandler = (e) => {
         e.preventDefault();
-        dispatch(login(email, password));
+        const resp = dispatch(login(email, password));
+        console.log(">>>>>>",resp);
 
 
     }

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useAlert } from 'react-alert';
 import { useDispatch, useSelector } from 'react-redux';
-import {  useNavigate } from 'react-router-dom';
-import { clearErrors, newProduct } from '../../actions/productActions';
+import { useNavigate, useParams } from 'react-router-dom';
+import { clearErrors, updateProduct, getProductDetails } from '../../actions/productActions';
 import Sidebar from './Sidebar'
 import Loader from '../layout/Loader'
 import MetaData from '../layout/MetaData'
-import { NEW_PRODUCT_RESET } from '../../constants/productConstants';
+import { UPDATE_PRODUCT_RESET } from '../../constants/productConstants';
+const UpdateProduct = () => {
 
-const NewProduct = () => {
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
     const [description, setDescription] = useState('');
@@ -16,9 +16,86 @@ const NewProduct = () => {
     const [stock, setStock] = useState(0);
     const [seller, setSeller] = useState('');
     const [images, setImages] = useState([]);
+    const [oldImages, setOldImages] = useState([]);
     const [imagePreview, setImagePreview] = useState([]);
 
+    const alert = useAlert();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const params = useParams();
 
+    const { product, error } = useSelector(state => state.productDetails)
+    const { loading, error: updateError, isUpdated } = useSelector(state => state.product)
+
+    const productId = params.id;
+
+
+    useEffect(() => {
+        if (product && product._id !== productId) {
+            dispatch(getProductDetails(productId))
+        } else {
+            setName(product.name);
+            setPrice(product.price);
+            setDescription(product.description);
+            setCategory(product.category);
+            setSeller(product.seller)
+            setStock(product.stock);
+            setOldImages(product.images)
+        }
+
+        if (error) {
+            alert.error(error)
+            dispatch(clearErrors());
+        }
+        if (updateError) {
+            alert.error(updateError)
+            dispatch(clearErrors());
+        }
+        if (isUpdated) {
+            navigate('/admin/products');
+            alert.success("Product Updated Successfully");
+            dispatch({ type: UPDATE_PRODUCT_RESET })
+
+        }
+    }, [dispatch, updateError, error, alert, product, productId, isUpdated, navigate])
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.set('name', name);
+        formData.set('price', price);
+        formData.set('description', description);
+        formData.set('category', category);
+        formData.set('stock', stock);
+        formData.set('seller', seller);
+        images.forEach(image => {
+            formData.append('images', image)
+        })
+        dispatch(updateProduct(product._id, formData))
+
+
+
+    }
+
+    const onChange = (e) => {
+        const files = Array.from(e.target.files)
+        setImagePreview([]);
+        setImages([]);
+        setOldImages([]);
+        files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                if (reader.readyState === 2) {
+                    setImagePreview(oldArray => [...oldArray, reader.result])
+                    setImages(oldArray => [...oldArray, reader.result])
+
+                }
+            }
+            reader.readAsDataURL(file)
+        })
+
+
+    }
     const categories = [
         'Choose One',
         'Electronics',
@@ -35,65 +112,11 @@ const NewProduct = () => {
         'Outdoor',
         'Home'
     ]
-    const alert = useAlert();
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-
-    const { loading, error, success } = useSelector(state => state.newProduct)
-
-    useEffect(() => {
-        if (error) {
-            alert.error(error)
-            dispatch(clearErrors());
-        }
-        if (success) {
-            navigate('/admin/products');
-            alert.success("Product Created Successfully");
-            dispatch({ type: NEW_PRODUCT_RESET })
-
-        }
-    }, [dispatch, error, alert, success,navigate])
-
-    const submitHandler = (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.set('name', name);
-        formData.set('price', price);
-        formData.set('description', description);
-        formData.set('category', category);
-        formData.set('stock', stock);
-        formData.set('seller', seller);
-        images.forEach(image => {
-            formData.append('images', image)
-        })
-        dispatch(newProduct(formData))
-
-
-
-    }
-    const onChange = (e) => {
-        const files = Array.from(e.target.files)
-        setImagePreview([]);
-        setImages([]);  
-        files.forEach(file => {
-            const reader = new FileReader();
-            reader.onload = () => {
-                if (reader.readyState === 2) {
-                    setImagePreview(oldArray => [...oldArray, reader.result])
-                    setImages(oldArray => [...oldArray, reader.result])
-
-                }
-            }
-            reader.readAsDataURL(file)
-        })
-
-
-    }
 
 
     return (
         <>
-            <MetaData title={'New Product'} />
+            <MetaData title={'Update Product'} />
             <div className="row">
                 <div className="col-12 col-md-2">
                     <Sidebar />
@@ -104,7 +127,7 @@ const NewProduct = () => {
                             <>
                                 <div className="wrapper my-5 ">
                                     <form className="shadow-lg w-75" onSubmit={submitHandler} encType='multipart/form-data'>
-                                        <h1 className="mb-4">New Product</h1>
+                                        <h1 className="mb-4">Update Product</h1>
 
                                         <div className="form-group">
                                             <label htmlFor="name_field">Name</label>
@@ -183,6 +206,9 @@ const NewProduct = () => {
                                                 </label>
                                             </div>
                                         </div>
+                                        {oldImages && oldImages.map(img => (
+                                            <img key={img} src={img.url} alt={img.url} className="mt-3 mr-2" width={55} height={52} />
+                                        ))}
                                         {imagePreview && imagePreview.map(image => (
                                             <img src={image} alt={image} className="mt-3 mr-2" width={55} height={52} />
                                         ))}
@@ -194,7 +220,7 @@ const NewProduct = () => {
                                             className="btn btn-block py-3"
                                             disabled={loading ? true : false}
                                         >
-                                            CREATE
+                                            UPDATE
                                         </button>
 
                                     </form>
@@ -209,7 +235,8 @@ const NewProduct = () => {
 
             </div>
         </>
+
     )
 }
 
-export default NewProduct
+export default UpdateProduct

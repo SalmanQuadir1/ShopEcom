@@ -7,20 +7,20 @@ const Product = ({ product }) => {
             <div className="card p-3 rounded">
                     <img
                         className="card-img-top mx-auto"
-                        src={`data:image/png;base64,${product.images[0].image} `}
+                        src={product.images[0].url}
                         alt='img' />
                 <div className="card-body d-flex flex-column">
                     <h5 className="card-title">
-                        <Link to={`/product/${product.id}`}>{product.productName}</Link>
+                        <Link to={`/product/${product._id}`}>{product.name}</Link>
                     </h5>
                     <div className="ratings mt-auto">
                         <div className="rating-outer">
                             <div className="rating-inner"></div>
                         </div>
-                        <span id="no_of_reviews">(5 Reviews)</span>
+                        <span id="no_of_reviews">({product.reviews && product.reviews.length} Reviews)</span>
                     </div>
                     <p className="card-text">&#8377;{product.price}</p>
-                    <Link to={`/product/${product.id}`} id="view_btn" className="btn btn-block">View Details</Link>
+                    <Link to={`/product/${product._id}`} id="view_btn" className="btn btn-block">View Details</Link>
                 </div>
             </div>
         </div>

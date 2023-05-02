@@ -25,11 +25,11 @@ const Sidebar = () => {
                     </li>
 
                     <li>
-                        <Link to="/orders"><i className="fa fa-shopping-basket"></i> Orders</Link>
+                        <Link to="/admin/orders"><i className="fa fa-shopping-basket"></i> Orders</Link>
                     </li>
 
                     <li>
-                        <Link to="/users"><i className="fa fa-users"></i> Users</Link>
+                        <Link to="/admin/users"><i className="fa fa-users"></i> Users</Link>
                     </li>
                     <li>
                         <Link to="/reviews"><i className="fa fa-star"></i> Reviews</Link>

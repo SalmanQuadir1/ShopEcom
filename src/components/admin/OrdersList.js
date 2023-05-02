@@ -2,47 +2,42 @@ import React, { useEffect } from 'react'
 import { useAlert } from 'react-alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { clearErrors, deleteProduct, getAdminProducts } from '../../actions/productActions';
+import { clearErrors, allOrders } from '../../actions/orderActions';
 import Sidebar from './Sidebar'
 import Loader from '../layout/Loader'
 import MetaData from '../layout/MetaData'
 import { MDBDataTable } from 'mdbreact';
-import { DELETE_PRODUCT_RESET } from '../../constants/productConstants';
 
 const ProductsList = () => {
     const alert = useAlert();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { loading, error, products } = useSelector(state => state.products)
-    const { error: deleteError, isDeleted } = useSelector(state => state.product)
-
+    const { loading, error, orders } = useSelector(state => state.allOrders)
     useEffect(() => {
-        dispatch(getAdminProducts())
+        dispatch(allOrders())
         if (error) {
             alert.error(error)
             dispatch(clearErrors());
         }
-        if (deleteError) {
-            alert.error(deleteError)
-            dispatch(clearErrors());
-        }
-        if (isDeleted) {
-            alert.success("Product Deleted Successfully");
-            navigate('/admin/products');
-            dispatch({ type: DELETE_PRODUCT_RESET });
-        }
 
-    }, [dispatch, error, alert, isDeleted, deleteError, navigate])
+        // if(isDeleted) {
+        //     alert.success("Product Deleted Successfully");
+        //     navigate('/admin/products');
+        //     dispatch({ type: DELETE_PRODUCT_RESET });
+        // }
+
+    }, [dispatch, error, alert, navigate])
 
     const deleteHandler = (id) => {
-        dispatch(deleteProduct(id))
+        //dispatch((id))
+        console.log(id);
 
     }
 
 
 
-    const setProducts = () => {
+    const setOrders = () => {
         const data = {
             columns: [
                 {
@@ -51,30 +46,31 @@ const ProductsList = () => {
                     sort: 'asc'
                 },
                 {
-                    label: ' ID',
-                    field: '_id',
+                    label: ' Order ID',
+                    field: 'id',
                     sort: 'asc'
                 },
                 {
-                    label: 'Name',
-                    field: 'name',
+                    label: 'No of Items',
+                    field: 'numOfItems',
                     sort: 'asc'
                 },
                 {
-                    label: 'Price',
-                    field: 'price',
+                    label: 'Amount',
+                    field: 'amount',
                     sort: 'asc'
                 },
                 {
-                    label: 'Category',
-                    field: 'category',
+                    label: 'Status',
+                    field: 'status',
                     sort: 'asc'
                 },
                 {
-                    label: 'Stock',
-                    field: 'stock',
+                    label: 'Payment Info',
+                    field: 'paymentInfo',
                     sort: 'asc'
                 },
+
                 {
                     label: 'Actions',
                     field: 'actions',
@@ -83,20 +79,25 @@ const ProductsList = () => {
             ],
             rows: []
         }
-        products && products.forEach((product, index) => {
+        orders && orders.forEach((order, index) => {
             data.rows.push({
                 sno: index + 1,
-                _id: product._id,
-                name: product.name,
-                price: `₹${product.price}`,
-                category: product.category,
-                stock: product.stock,
+                id: order._id,
+                numOfItems: order.orderItems.length,
+                amount: `₹${order.totalPrice}`,
+                status: order.orderStatus && String(order.orderStatus).includes('Delivered')
+                    ? <p style={{ color: 'green' }}>{order.orderStatus}</p>
+                    : <p style={{ color: 'red' }}>{order.orderStatus}</p>,
+
+                paymentInfo: order.paymentInfo.status && String(order.paymentInfo.status).includes('succeeded')
+                    ? <p style={{ color: 'green' }}>Success</p>
+                    : <p style={{ color: 'red' }}>Failed</p>,
 
                 actions:
                     <>
 
-                        <Link to={`/admin/product/${product._id}`} className=' py-1 px-2'><i className='fa fa-pencil text-success'></i></Link>
-                        <Link className=' ml-2 py-1 px-2'><i className='fa fa-trash text-danger' onClick={() => deleteHandler(product._id)}></i></Link>
+                        <Link to={`/admin/order/${order._id}`} className=' py-1 px-2'><i className='fa fa-eye text-success'></i></Link>
+                        <Link className=' ml-2 py-1 px-2'><i className='fa fa-trash text-danger' onClick={() => deleteHandler(order._id)}></i></Link>
                     </>
             })
 
@@ -106,17 +107,17 @@ const ProductsList = () => {
 
     return (
         <>
-            <MetaData title={'ProductList'} />
+            <MetaData title={'All Orders'} />
             <div className="row">
                 <div className="col-12 col-md-2">
                     <Sidebar />
                 </div>
                 <div className="col-12 col-md-10">
                     <>
-                        <h1 className="my-5">All Products</h1>
+                        <h1 className="my-5">All Orders</h1>
                         {loading ? <Loader /> : (
                             <MDBDataTable
-                                data={setProducts()}
+                                data={setOrders()}
                                 className='px-3'
                                 bordered
                                 striped
