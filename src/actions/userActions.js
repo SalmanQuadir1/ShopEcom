@@ -45,7 +45,7 @@ export const login = (email, password) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: LOGIN_FAIL,
-            payload: error.response.data.message
+            payload: error.response.data.errMessage
         })
     }
 }
@@ -67,7 +67,7 @@ export const register = (userData) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: REGISTER_USER_FAIL,
-            payload: error.response.data.message
+            payload: error.response.data.errMessage
         })
     }
 }
@@ -91,7 +91,7 @@ export const updateProfile = (userData) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: UPDATE_PROFILE_FAIL,
-            payload: error.response.data.message
+            payload: error.response.data.errMessage
         })
     }
 }
@@ -115,7 +115,7 @@ export const updatePassword = (passwords) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: UPDATE_PASSWORD_FAIL,
-            payload: error.response.data.message
+            payload: error.response.data.errMessage
         })
     }
 }
@@ -137,7 +137,7 @@ export const loadUser = () => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: LOAD_USER_FAIL,
-            payload: error.response
+            payload: error.response.data.errMessage
         })
     }
 }
@@ -155,7 +155,7 @@ export const logout = () => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: LOGOUT_FAIL,
-            payload: error.response.data.message
+            payload: error.response.data.errMessage
         })
     }
 }
@@ -179,7 +179,7 @@ export const getAdminUsers = () => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: ADMIN_USERS_FAIL,
-            payload: error.response.data.message
+            payload: error.response.data.errMessage
         })
 
     }
@@ -203,7 +203,7 @@ export const deleteUser = (id) => async (dispatch) => {
         console.log(error);
         dispatch({
             type: DELETE_USER_FAIL,
-            payload: error.response.data.message
+            payload: error.response.data.errMessage
         })
 
     }

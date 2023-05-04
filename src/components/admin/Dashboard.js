@@ -116,7 +116,8 @@ const Dashboard = () => {
                                 <div className="card-body  ">
                                     <div className="row pt-3">
                                         <div className="col-md-6">
-                                            <div className="mt-2 text-center"> <i className="fa fa-users fa-3x text-info"></i></div>
+                                            <div className="mt-2 text-center"> <i className
+                                            ="fa fa-users fa-3x text-info"></i></div>
 
                                         </div>
                                         <div className="col-md-6 text-center">
@@ -145,7 +146,7 @@ const Dashboard = () => {
                             <div className="card shadow-lg o-hidden h-100 border-0">
                                 <div className="card-body">
                                     <div className="text-center card-font-size">Out of Stock<br /> <b>4</b></div>
-                                    <div className="mt-2 text-center "> <i class="fa fa-stop-circle fa-2x text-danger"></i></div>
+                                    <div className="mt-2 text-center "> <i className="fa fa-stop-circle fa-2x text-danger"></i></div>
 
                                 </div>
                             </div>

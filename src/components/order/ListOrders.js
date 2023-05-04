@@ -62,7 +62,7 @@ const ListOrders = () => {
                     <p style={{ color: 'green' }}>{order.orderStatus}</p>
                     : <p style={{ color: 'red' }}>{order.orderStatus}</p>,
                 actions:
-                    <Link to={`/orders/${order._id}`} className=''><i className='fa fa-eye'></i></Link>
+                    <Link to={`/order/${order._id}`} className=''><i className='fa fa-eye'></i></Link>
             })
 
         })

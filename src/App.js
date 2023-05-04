@@ -22,6 +22,7 @@ import OrderSuccess from './components/cart/OrderSuccess';
 import ListOrders from './components/order/ListOrders';
 import Dashboard from './components/admin/Dashboard';
 import ProductsList from './components/admin/ProductsList';
+import ProductsReviews from './components/admin/ProductReviews';
 import OrdersList from './components/admin/OrdersList';
 import NewProduct from './components/admin/NewProduct';
 import UpdateProfile from './components/user/UpdateProfile';
@@ -29,6 +30,8 @@ import UpdatePassword from './components/user/UpdatePassword';
 import axios from 'axios';
 import UpdateProduct from './components/admin/UpdateProduct';
 import UsersList from './components/admin/UsersList';
+import ProcessOrder from './components/admin/ProcessOrder';
+import OrderDetails from './components/order/OrderDetails';
 
 function App() {
   const [stripeApiKey, setStripeApiKey] = useState('');
@@ -36,7 +39,7 @@ function App() {
 
   useEffect(() => {
 
-    //store.dispatch(loadUser())
+    store.dispatch(loadUser())
 
     async function getStripeApiKey() {
 
@@ -69,6 +72,7 @@ function App() {
             <Route path='/order/confirm' element={<ProtectedRoute Component={ConfirmOrder}></ProtectedRoute>}></Route>
             <Route path='/order/success' element={<ProtectedRoute Component={OrderSuccess}></ProtectedRoute>}></Route>
             <Route path='/orders/me' element={<ProtectedRoute Component={ListOrders}></ProtectedRoute>}></Route>
+            <Route path='/order/:id' element={<ProtectedRoute  Component={OrderDetails}></ProtectedRoute>}></Route>
 
 
 
@@ -90,7 +94,9 @@ function App() {
           <Route path='/admin/product/:id' element={<ProtectedRoute isAdmin={true} Component={UpdateProduct}></ProtectedRoute>}></Route>
           <Route path='/admin/product' element={<ProtectedRoute isAdmin={true} Component={NewProduct}></ProtectedRoute>}></Route>
           <Route path='/admin/orders' element={<ProtectedRoute isAdmin={true} Component={OrdersList}></ProtectedRoute>}></Route>
+          <Route path='/admin/order/:id' element={<ProtectedRoute isAdmin={true} Component={ProcessOrder}></ProtectedRoute>}></Route>
           <Route path='/admin/users' element={<ProtectedRoute isAdmin={true} Component={UsersList}></ProtectedRoute>}></Route>
+          <Route path='/admin/reviews' element={<ProtectedRoute isAdmin={true} Component={ProductsReviews}></ProtectedRoute>}></Route>
         </Routes>
 
       {/* {!loading && user.role !== 'admin ' && ( */}
