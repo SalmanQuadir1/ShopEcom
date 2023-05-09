@@ -74,6 +74,10 @@ nav {
 .card {
   height: 100%;
 }
+.c1:hover{
+  transform: scale(1.1);
+  transition: ease 0.5s;
+}
 
 .card-title a {
   color: #2e2e2e;
