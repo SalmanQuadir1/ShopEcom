@@ -122,7 +122,8 @@ const ProductsList = () => {
                                 striped
                                 hover
                                 noBottomColumns={true}
-                            />)
+                            />
+                        )
 
                         }
                     </>

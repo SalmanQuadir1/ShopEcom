@@ -45,7 +45,7 @@ const Payment = () => {
         shippingInfo
     }
     const orderInfo = JSON.parse(sessionStorage.getItem('orderInfo'));
-    
+
     if (orderInfo) {
         order.itemsPrice = orderInfo.itemsPrice
         order.shippingPrice = orderInfo.shippingPrice
@@ -54,7 +54,7 @@ const Payment = () => {
     }
 
     const paymentData = {
-        amount: Math.round(orderInfo.totalPrice)
+        amount: Math.round(orderInfo.totalPrice * 100)
 
     }
     const submitHandler = async (e) => {
@@ -97,7 +97,7 @@ const Payment = () => {
                     }
                     dispatch(createOrder(order))
                     for (let i = 0; i < order.orderItems.length; i++) {
-                       dispatch( removeItemsFromCart(order.orderItems[i].id));
+                        dispatch(removeItemsFromCart(order.orderItems[i].id));
                     }
 
                     navigate('/order/success')

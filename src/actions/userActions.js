@@ -74,7 +74,7 @@ export const register = (userData) => async (dispatch) => {
 
 //Update User profile
 export const updateProfile = (userData) => async (dispatch) => {
-    console.log(".....",userData)
+    console.log(".....", userData)
     try {
         dispatch({ type: UPDATE_PROFILE_REQUEST })
         const config = {
@@ -89,6 +89,7 @@ export const updateProfile = (userData) => async (dispatch) => {
         })
 
     } catch (error) {
+        console.log(error)
         dispatch({
             type: UPDATE_PROFILE_FAIL,
             payload: error.response.data.errMessage
@@ -98,7 +99,7 @@ export const updateProfile = (userData) => async (dispatch) => {
 
 //Update User password
 export const updatePassword = (passwords) => async (dispatch) => {
-    console.log(".....",passwords)
+    console.log(".....", passwords)
     try {
         dispatch({ type: UPDATE_PASSWORD_REQUEST })
         const config = {
@@ -128,7 +129,7 @@ export const loadUser = () => async (dispatch) => {
         dispatch({ type: LOAD_USER_REQUEST })
 
         const { data } = await axios.get('/api/v1/me');
-        console.log("xsaxaxa",data);
+        console.log("xsaxaxa", data);
         dispatch({
             type: LOAD_USER_SUCCESS,
             payload: data.user
@@ -150,7 +151,7 @@ export const logout = () => async (dispatch) => {
             type: LOGOUT_SUCCESS,
 
         })
-         sessionStorage.removeItem('LoginUser')
+        sessionStorage.removeItem('LoginUser')
 
     } catch (error) {
         dispatch({
@@ -164,7 +165,7 @@ export const clearErrors = () => async (dispatch) => {
         type: CLEAR_ERRORS
 
     })
-} 
+}
 //get all users
 export const getAdminUsers = () => async (dispatch) => {
     try {

@@ -134,13 +134,14 @@ export const getProductDetails = (id) => async (dispatch) => {
 export const getAdminProducts = () => async (dispatch) => {
     try {
         dispatch({ type: ADMIN_PRODUCTS_REQUEST })
-        const { data } = await axios.get(`/api/v1/products`);
+        const { data } = await axios.get(`/api/v1/admin/products`);
         dispatch({
             type: ADMIN_PRODUCTS_SUCCESS,
             payload: data.products
         })
 
     } catch (error) {
+        console.log(error);
         dispatch({
             type: ADMIN_PRODUCTS_FAIL,
             payload: error.response.data.errMessage

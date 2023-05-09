@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useAlert } from 'react-alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { loadUser, updateProfile ,clearErrors} from '../../actions/userActions';
+import { loadUser, updateProfile, clearErrors } from '../../actions/userActions';
 import { UPDATE_PROFILE_RESET } from '../../constants/userConstants';
 import MetaData from '../layout/MetaData';
 
@@ -30,11 +30,6 @@ const UpdateProfile = () => {
             setEmail(user.email);
             setAvatarPreview(user.avatar[0].url);
         }
-
-        if (error) {
-            alert.error(error);
-            dispatch(clearErrors());
-        }
         if (isUpdated) {
             alert.success('User Updated Successfully');
             dispatch(loadUser());
@@ -44,6 +39,12 @@ const UpdateProfile = () => {
             })
 
         }
+
+        if (error) {
+            alert.error(error);
+            dispatch(clearErrors());
+        }
+
     }, [dispatch, loading, error, alert, user, isUpdated, navigate])
 
     const submitHandler = (e) => {
@@ -55,8 +56,7 @@ const UpdateProfile = () => {
         formData.set('email', email);
         formData.set('avatar', avatar);
 
-        const responsee = dispatch(updateProfile(formData));
-        console.log(responsee ,formData);
+        dispatch(updateProfile(formData));
 
     }
     const onChange = (e) => {
@@ -66,7 +66,6 @@ const UpdateProfile = () => {
             if (reader.readyState === 2) {
                 setAvatarPreview(reader.result);
                 setAvatar(reader.result);
-
             }
         }
         reader.readAsDataURL(e.target.files[0])
@@ -100,6 +99,7 @@ const UpdateProfile = () => {
                                 id="email_field"
                                 class="form-control"
                                 name='email'
+                                disabled
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
 

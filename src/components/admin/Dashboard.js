@@ -7,7 +7,7 @@ import Sidebar from './Sidebar'
 const Dashboard = () => {
     const dispatch = useDispatch();
     const { error, orders, totalAmount } = useSelector(state => state.allOrders)
-    const { products } = useSelector(state => state.products)
+    const { products, productsCount } = useSelector(state => state.products)
     const { users } = useSelector(state => state.users)
 
     useEffect(() => {
@@ -61,7 +61,7 @@ const Dashboard = () => {
                                         </div>
                                         <div className="col-md-6 text-center">
                                             <div>
-                                                <h1>{products && products.length}</h1> </div>
+                                                <h1>{productsCount && productsCount}</h1> </div>
                                             <div className="text-center card-font-size">Products<br />
                                             </div>
                                         </div>
@@ -117,7 +117,7 @@ const Dashboard = () => {
                                     <div className="row pt-3">
                                         <div className="col-md-6">
                                             <div className="mt-2 text-center"> <i className
-                                            ="fa fa-users fa-3x text-info"></i></div>
+                                                ="fa fa-users fa-3x text-info"></i></div>
 
                                         </div>
                                         <div className="col-md-6 text-center">
