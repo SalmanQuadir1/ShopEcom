@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { useAlert } from 'react-alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { clearErrors, deleteUser, getAdminUsers } from '../../actions/userActions';
+import {  clearErrors, deleteUser, getAdminUsers } from '../../actions/userActions';
 import Loader from '../layout/Loader';
 import MetaData from '../layout/MetaData';
 import Sidebar from './Sidebar';
@@ -13,7 +13,7 @@ const UsersList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { loading, error, users } = useSelector(state => state.users)
+    const { loading, error, users} = useSelector(state => state.users)
     console.log("users....", users);
     useEffect(() => {
         dispatch(getAdminUsers())
@@ -55,13 +55,13 @@ const UsersList = () => {
                     field: 'email',
                     sort: 'asc'
                 },
-               
+
                 {
                     label: 'Role',
                     field: 'role',
                     sort: 'asc'
                 },
-             
+
 
                 {
                     label: 'Actions',
@@ -72,15 +72,16 @@ const UsersList = () => {
             rows: []
         }
         users && users.forEach((user, index) => {
+            console.log(user);
             data.rows.push({
                 sno: index + 1,
                 id: user._id,
                 name: user.name,
-                email:user.email,
+                email: user.email,
                 role: user.role && String(user.role).includes('admin')
-                ? <p style={{ color: 'green' }}>{user.role}</p>
-                : <p style={{ color: 'red' }}>{user.role}</p>,
-               
+                    ? <p style={{ color: 'green' }}>{user.role}</p>
+                    : <p style={{ color: 'red' }}>{user.role}</p>,
+
                 actions:
                     <>
 

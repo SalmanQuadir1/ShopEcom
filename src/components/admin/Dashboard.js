@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { allOrders } from '../../actions/orderActions'
 import Sidebar from './Sidebar'
+import { getAdminUsers } from '../../actions/userActions'
+import { getProducts } from '../../actions/productActions'
 
 const Dashboard = () => {
     const dispatch = useDispatch();
     const { error, orders, totalAmount } = useSelector(state => state.allOrders)
-    const { products, productsCount } = useSelector(state => state.products)
+    const { productsCount } = useSelector(state => state.products)
     const { users } = useSelector(state => state.users)
 
     useEffect(() => {
@@ -16,6 +18,10 @@ const Dashboard = () => {
         }
 
         dispatch(allOrders())
+        dispatch(getAdminUsers())
+        dispatch(getProducts())
+
+
 
     }, [dispatch, error])
 
@@ -142,7 +148,7 @@ const Dashboard = () => {
                         </div>
 
 
-                        <div className="col-xl-4 col-sm-6 mb-3">
+                        {/* <div className="col-xl-4 col-sm-6 mb-3">
                             <div className="card shadow-lg o-hidden h-100 border-0">
                                 <div className="card-body">
                                     <div className="text-center card-font-size">Out of Stock<br /> <b>4</b></div>
@@ -150,7 +156,7 @@ const Dashboard = () => {
 
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

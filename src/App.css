@@ -77,6 +77,11 @@ nav {
 .c1:hover{
   transform: scale(1.1);
   transition: ease 0.5s;
+  box-shadow: 1px 3px 3px 3px lightgrey;
+}
+.h2 {
+  font-family: Lobster, Monospace;
+  color: #fdcc0d;
 }
 
 .card-title a {

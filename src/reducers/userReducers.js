@@ -17,6 +17,8 @@ import {
     ADMIN_USERS_SUCCESS,
     ADMIN_USERS_FAIL,
 
+   
+
     UPDATE_PROFILE_FAIL,
     UPDATE_PROFILE_REQUEST,
     UPDATE_PROFILE_SUCCESS,
@@ -150,11 +152,13 @@ export const usersReducer = (state = { users: [] }, action) => {
 
         case ADMIN_USERS_REQUEST:
             return {
+                ...state,
                 loading: true,
-                users: []
+
             }
         case ADMIN_USERS_SUCCESS:
             return {
+                ...state,
                 loading: false,
                 users: action.payload.users
 
@@ -162,8 +166,9 @@ export const usersReducer = (state = { users: [] }, action) => {
 
         case ADMIN_USERS_FAIL:
             return {
+                ...state,
                 loading: false,
-                error: action.payload
+                error: null
             }
         case CLEAR_ERRORS:
             return {
@@ -175,3 +180,4 @@ export const usersReducer = (state = { users: [] }, action) => {
             return state;
     }
 }
+

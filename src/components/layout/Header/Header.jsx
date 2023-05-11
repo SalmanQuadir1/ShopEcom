@@ -1,6 +1,6 @@
 import React from 'react'
 import Search from '../Search'
-import { Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useAlert } from 'react-alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../actions/userActions';
@@ -21,7 +21,8 @@ const Header = () => {
       <nav className="navbar row">
         <div className="col-12 col-md-3">
           <div className="navbar-brand">
-            <Link to="/"><img src="/images/ecom.jpg" width={100} height={50} alt="Logo img" /></Link>
+            {/* <Link to="/"><img src="/images/ecom.jpg" width={100} height={50} alt="Logo img" /></Link> */}
+            <Link to="/" style={{ textDecoration: 'none' }}><h2 class="h2" >EcommerceApp</h2></Link>
           </div>
         </div>
         <div className="col-12 col-md-6 mt-2 mt-md-0">

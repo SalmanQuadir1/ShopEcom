@@ -32,6 +32,7 @@ import UpdateProduct from './components/admin/UpdateProduct';
 import UsersList from './components/admin/UsersList';
 import ProcessOrder from './components/admin/ProcessOrder';
 import OrderDetails from './components/order/OrderDetails';
+import BannerCarousel from './components/BannerCarousel';
 
 function App() {
   const [stripeApiKey, setStripeApiKey] = useState('');
@@ -55,13 +56,16 @@ function App() {
     <Router>
       <div className="App">
         <Header />
+        <Routes>
+            <Route exact path='/' Component={BannerCarousel} />
+
+        </Routes>
         <div className="container container-fluid">
           <Routes>
             <Route exact path='/' Component={Home} />
             <Route exact path="/search/:keyword" Component={Home} />
             <Route exact path='/product/:id' Component={ProductDetails} />
             <Route exact path='/cart' Component={Cart} />
-
             <Route exact path='/login' Component={Login} />
             <Route exact path='/register' Component={Register} />
 

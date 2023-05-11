@@ -8,6 +8,7 @@ import { Carousel } from 'react-bootstrap'
 import { addItemsToCart } from '../../actions/cartActions'
 import { NEW_REVIEW_RESET } from '../../constants/productConstants';
 import ListReview from '../review/ListReview';
+
 const ProductDetails = () => {
     const { id } = useParams();
     const alert = useAlert();
@@ -42,7 +43,6 @@ const ProductDetails = () => {
         const count = document.querySelector('.count');
         // if (count.valueAsNumber >= product.quantity) {
         //     return
-
         // }
         const qty = count.valueAsNumber - 1;
         setQuantity(qty);
@@ -53,7 +53,6 @@ const ProductDetails = () => {
         const count = document.querySelector('.count');
         // if (count.valueAsNumber <= product.quantity) {
         //     return
-
         // }
         const qty = count.valueAsNumber + 1;
         setQuantity(qty);
@@ -136,7 +135,7 @@ const ProductDetails = () => {
                             <hr />
 
                             <div className="rating-outer">
-                                <div className="rating-inner" ></div>
+                                <div className="rating-inner"  style={{ width: `${(product.ratings / 5) * 100}%` }} ></div>
                             </div>
                             <span id="no_of_reviews">({product.reviews && product.reviews.length} Reviews)</span>
 
