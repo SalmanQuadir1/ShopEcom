@@ -80,6 +80,7 @@ const ListOrders = () => {
                         className='px-3'
                         bordered
                         striped
+                        responsive
                         hover
                         noBottomColumns={true}
                     />

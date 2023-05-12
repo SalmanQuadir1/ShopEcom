@@ -108,6 +108,7 @@ const UsersList = () => {
                                 data={setOrders()}
                                 className='px-3'
                                 bordered
+                                responsive
                                 striped
                                 hover
                                 noBottomColumns={true}
