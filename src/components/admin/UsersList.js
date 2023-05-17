@@ -3,7 +3,8 @@ import React, { useEffect } from 'react'
 import { useAlert } from 'react-alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import {  clearErrors, deleteUser, getAdminUsers } from '../../actions/userActions';
+import { clearErrors, deleteUser, getAdminUsers } from '../../actions/userActions';
+import { DELETE_USER_RESET } from '../../constants/userConstants';
 import Loader from '../layout/Loader';
 import MetaData from '../layout/MetaData';
 import Sidebar from './Sidebar';
@@ -13,8 +14,8 @@ const UsersList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { loading, error, users} = useSelector(state => state.users)
-    console.log("users....", users);
+    const { loading, error, users } = useSelector(state => state.users)
+    const { isDeleted } = useSelector(state => state.user)
     useEffect(() => {
         dispatch(getAdminUsers())
         if (error) {
@@ -22,8 +23,14 @@ const UsersList = () => {
             dispatch(clearErrors());
         }
 
+        if (isDeleted) {
+            alert.success("User Deleted Successfully");
+            navigate('/Shopping/admin/users');
+            dispatch({ type: DELETE_USER_RESET });
+        }
 
-    }, [dispatch, error, alert, navigate])
+
+    }, [dispatch, error, alert, navigate, isDeleted])
 
     const deleteHandler = (id) => {
         dispatch(deleteUser(id))
@@ -85,7 +92,7 @@ const UsersList = () => {
                 actions:
                     <>
 
-                        <Link to={`/admin/user/${user._id}`} className=' py-1 px-2'><i className='fa fa-eye text-primary'></i></Link>
+                        <Link to={`/Shopping/admin/user/${user._id}`} className=' py-1 px-2'><i className='fa fa-eye text-primary'></i></Link>
                         <Link className=' ml-2 py-1 px-2'><i className='fa fa-trash text-danger' onClick={() => deleteHandler(user._id)}></i></Link>
                     </>
             })
@@ -108,8 +115,8 @@ const UsersList = () => {
                                 data={setOrders()}
                                 className='px-3'
                                 bordered
-                                responsive
                                 striped
+                                responsive
                                 hover
                                 noBottomColumns={true}
                             />)
