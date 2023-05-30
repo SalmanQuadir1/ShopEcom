@@ -9,26 +9,27 @@ const Cart = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+
     const { cartItems } = useSelector(state => state.cart)
     const { isAuthenticated } = useSelector(state => state.auth);
 
     console.log("cart", cartItems);
 
-    const removeCartItemHandler = (id) => {
-
-        dispatch(removeItemsFromCart(id));
+    const removeCartItemHandler = (id, price) => {
+        dispatch(removeItemsFromCart(id, price));
 
     }
 
-    const decreaseQty = (id, quantity) => {
+    const decreaseQty = (id, quantity, priceObj) => {
         const newQty = quantity - 1;
-        dispatch(addItemsToCart(id, newQty))
+        dispatch(addItemsToCart(id, newQty, priceObj))
 
     }
 
-    const increaseQty = (id, quantity) => {
+    const increaseQty = (id, quantity, price) => {
+        console.log(price, ".......pricedm")
         const newQty = quantity + 1;
-        dispatch(addItemsToCart(id, newQty))
+        dispatch(addItemsToCart(id, newQty, price))
     }
     const checkoutHandler = () => {
         if (isAuthenticated) {
@@ -73,15 +74,15 @@ const Cart = () => {
 
                                             <div className="col-4 col-lg-3 mt-4 mt-lg-0">
                                                 <div className="stockCounter d-inline">
-                                                    <span className="btn btn-danger minus" onClick={() => decreaseQty(item.id, item.quantity)}>-</span>
+                                                    <span className="btn btn-danger minus" onClick={() => decreaseQty(item.id, item.quantity, item)}>-</span>
                                                     <input type="number" className="form-control count d-inline" value={item.quantity} readOnly />
 
-                                                    <span className="btn btn-primary plus" onClick={() => increaseQty(item.id, item.quantity)}>+</span>
+                                                    <span className="btn btn-primary plus" onClick={() => increaseQty(item.id, item.quantity, item)}>+</span>
                                                 </div>
                                             </div>
 
                                             <div className="col-4 col-lg-1 mt-4 mt-lg-0">
-                                                <i id="delete_cart_item" className="fa fa-trash btn btn-danger" onClick={() => removeCartItemHandler(item.id)}></i>
+                                                <i id="delete_cart_item" className="fa fa-trash btn btn-danger" onClick={() => removeCartItemHandler(item.id, item.price)}></i>
                                             </div>
 
                                         </div>

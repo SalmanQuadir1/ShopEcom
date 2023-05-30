@@ -88,7 +88,7 @@ const ProductsList = () => {
                 sno: index + 1,
                 _id: product._id,
                 name: product.name,
-                price: `₹${product.price}`,
+                price: `₹${product.productWeightPrice[0].price}`,
                 category: product.category,
                 stock: product.stock,
 

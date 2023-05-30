@@ -73,6 +73,24 @@ nav {
 .pb3{
   padding-bottom: 2.3rem !important;
 }
+.overflowscroll{
+  overflow-x: scroll !important;
+
+}
+.selected{
+  background-color: #FA9C23;
+  color: white;
+  border: none;
+}
+.cursorPointer{
+  cursor: pointer;
+  line-height: 0.1rem;
+  width: 8rem;
+  height: 4rem;
+  padding: 0.8rem 0 !important;
+  border-radius: 4px;
+
+}
 
 .card {
   height: 100%;

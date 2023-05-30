@@ -9,7 +9,7 @@ import Pagination from 'react-js-pagination'
 import { useParams } from 'react-router-dom'
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import BannerCarousel from './BannerCarousel'
+// import BannerCarousel from './BannerCarousel'
 
 
 

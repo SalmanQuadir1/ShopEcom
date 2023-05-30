@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { useAlert } from 'react-alert';
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom';
@@ -11,17 +11,11 @@ import ListReview from '../review/ListReview';
 
 const ProductDetails = () => {
     const { id } = useParams();
-    const alert = useAlert();
-    const [rating, setRating] = useState(0);
-    const [comment, setComment] = useState('');
-    const [quantity, setQuantity] = useState(1);
-    const dispatch = useDispatch();
-    const { loading, error, product } = useSelector((state) => state.productDetails);
-    const { user } = useSelector((state) => state.auth);
-    const { error: reviewError, success } = useSelector((state) => state.newReview);
 
     useEffect(() => {
+
         dispatch(getProductDetails(id))
+
         if (error) {
             alert.error(error);
             dispatch(clearErrors())
@@ -34,16 +28,34 @@ const ProductDetails = () => {
             alert.success('Review Posted Successfully');
             dispatch({ type: NEW_REVIEW_RESET })
 
-
         }
 
-    }, [dispatch, alert, error, reviewError, id, success])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id])
+    const { loading, error, product } = useSelector((state) => state.productDetails);
+    const { error: reviewError, success } = useSelector((state) => state.newReview);
+    console.log("product", product);
+    const alert = useAlert();
+    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState('');
+    const [quantity, setQuantity] = useState(1);
+    const [i, setI] = useState(0);
+    const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.auth);
+    const [selectedPriceWeight, setSelectedPriceWeight] = useState(null);
+    useEffect(() => {
+        if (loading !== undefined && loading !== true && product.productWeightPrice[0]) {
+            // console.log('in effect', product.productWeightPrice[0])
+            setSelectedPriceWeight(product.productWeightPrice[0])
+        }
+    }, [loading, product])
+
+
+
 
     const decreaseQty = () => {
         const count = document.querySelector('.count');
-        // if (count.valueAsNumber >= product.quantity) {
-        //     return
-        // }
+
         const qty = count.valueAsNumber - 1;
         setQuantity(qty);
 
@@ -51,18 +63,18 @@ const ProductDetails = () => {
 
     const increaseQty = () => {
         const count = document.querySelector('.count');
-        // if (count.valueAsNumber <= product.quantity) {
-        //     return
-        // }
+
         const qty = count.valueAsNumber + 1;
         setQuantity(qty);
     }
 
     const addToCart = () => {
 
-        dispatch(addItemsToCart(id, quantity))
+        console.log({ id, quantity, selectedPriceWeight });
+        dispatch(addItemsToCart(id, quantity, selectedPriceWeight));
         alert.success('Item Added to Cart')
     }
+
     const setUserStars = () => {
         const stars = document.querySelectorAll('.star');
         stars.forEach((star, index) => {
@@ -101,6 +113,22 @@ const ProductDetails = () => {
         }
 
     }
+
+
+    const setprice = (e, pro, index) => {
+        const menuLis = document.querySelectorAll(".cursorPointer");
+        setSelectedPriceWeight(pro);
+        setI(index);
+
+        for (let div of menuLis) {
+            div.classList.remove('selected');
+        }
+
+        e.target.classList.add('selected');
+
+
+    }
+
     const reviewHandler = () => {
         const formData = new FormData();
         formData.set('rating', rating);
@@ -135,13 +163,13 @@ const ProductDetails = () => {
                             <hr />
 
                             <div className="rating-outer">
-                                <div className="rating-inner"  style={{ width: `${(product.ratings / 5) * 100}%` }} ></div>
+                                <div className="rating-inner" style={{ width: `${(product.ratings / 5) * 100}%` }} ></div>
                             </div>
                             <span id="no_of_reviews">({product.reviews && product.reviews.length} Reviews)</span>
 
                             <hr />
 
-                            <p id="product_price">&#8377;{product.price}</p>
+                            <p id="product_price">₹{product.productWeightPrice && product.productWeightPrice[i].price}</p>
                             <div className="stockCounter d-inline">
                                 <span className="btn btn-danger minus" onClick={decreaseQty}>-</span>
 
@@ -156,17 +184,58 @@ const ProductDetails = () => {
                             <p>Status: <span id="stock_status" className={product.stock > 0 ? 'greenColor' : 'redColor'} >{product.stock > 0 ? 'In Stock' : 'Out Of Stock'}</span></p>
 
                             <hr />
+                            <h6 className="mt-2" >Variants:</h6>
+                            <div className="d-flex align-items-center variants overflowscroll">
+                                {product.productWeightPrice && product.productWeightPrice.map((pro, index) => (
+
+                                    <Fragment>
+                                        {index === 0 ?
+                                            (
+
+                                                <>
+
+                                                    {(e) => setprice(e, pro, index)}
+                                                    <div onClick={(e) => setprice(e, pro, index)} key={index} className='  shadow-lg  m-2 text-center cursorPointer selected'>
+                                                        <p>Weight:{pro.weight}{pro.units} </p>
+                                                        <hr />
+                                                        <p> Size: {pro.size} </p>
+                                                    </div>
+                                                </>
+
+                                            ) : (
+                                                <>
+                                                    <div onClick={(e) => setprice(e, pro, index)} className=' shadow-lg  m-2 text-center cursorPointer '>
+
+                                                        <p>Weight:{pro.weight}{pro.units} </p>
+                                                        <hr />
+                                                        <p> Size: {pro.size} </p>
+                                                    </div>
+                                                </>
+
+                                            )
+                                        }
+
+                                    </Fragment>
+
+
+
+
+                                ))}
+                            </div>
+                            <p></p>
+                            <hr />
 
                             <h4 className="mt-2">Description:</h4>
                             <p>{product.description}</p>
                             <hr />
                             <p id="product_seller mb-3">Sold by: <strong>{product.seller}</strong></p>
-                            {user ?
-                                <button id="review_btn" type="button" className="btn btn-primary mt-4" data-toggle="modal" data-target="#ratingModal" onClick={setUserStars}>
-                                    Submit Your Review
-                                </button>
-                                :
-                                <div className="alert alert-danger mt-5" type="alert">Login to Post Your Review</div>
+                            {
+                                user ?
+                                    <button id="review_btn" type="button" className="btn btn-primary mt-4" data- toggle="modal" data-target="#ratingModal" onClick={setUserStars}>
+                                        Submit Your Review
+                                    </button>
+                                    :
+                                    <div className="alert alert-danger mt-5" type="alert">Login to Post Your Review</div>
 
                             }
 

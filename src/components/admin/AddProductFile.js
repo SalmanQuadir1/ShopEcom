@@ -27,6 +27,7 @@ const AddProductFile = () => {
         formData.append('file', files);
         try {
             const { data } = await axios.post('/upload', formData);
+            console.log(data)
             if (data.success) {
 
                 alert.success("Data Saved Successfully ");

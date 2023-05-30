@@ -28,6 +28,32 @@ const UpdateProduct = () => {
     const { loading, error: updateError, isUpdated } = useSelector(state => state.product)
 
     const productId = params.id;
+    const [formFields, setFormFields] = useState(product.productWeightPrice)
+
+    const handleFormChange = (e, index) => {
+        let data = [...formFields];
+        data[index][e.target.name] = e.target.value;
+        setFormFields(data);
+
+    }
+    const addFields = () => {
+        let field = {
+            weight: "",
+            price: "",
+            quantity: "",
+            units: "",
+            size: ""
+        }
+        setFormFields([...formFields, field]);
+
+    }
+    const removeFields = (index) => {
+        console.log(index);
+        let data = [...formFields];
+        data.splice(index, 1);
+        setFormFields(data);
+    }
+
 
 
     useEffect(() => {
@@ -41,6 +67,8 @@ const UpdateProduct = () => {
             setSeller(product.seller)
             setStock(product.stock);
             setOldImages(product.images)
+
+
         }
 
         if (error) {
@@ -68,9 +96,12 @@ const UpdateProduct = () => {
         formData.set('category', category);
         formData.set('stock', stock);
         formData.set('seller', seller);
+        formData.set('productWeightPrice', JSON.stringify(formFields));
+
         images.forEach(image => {
             formData.append('images', image)
         })
+        console.log(formFields);
         dispatch(updateProduct(product._id, formData))
 
 
@@ -140,7 +171,7 @@ const UpdateProduct = () => {
                                             />
                                         </div>
 
-                                        <div className="form-group">
+                                        {/* <div className="form-group">
                                             <label htmlFor="price_field">Price</label>
                                             <input
                                                 type="text"
@@ -149,6 +180,54 @@ const UpdateProduct = () => {
                                                 value={price}
                                                 onChange={(e) => setPrice(e.target.value)}
                                             />
+                                        </div> */}
+                                        <label>Product Info :</label>
+                                        <div className='mb-2 '>
+                                            <i style={{ cursor: 'pointer' }} className="fa fa-plus border border-warning p-2 mx-2" onClick={addFields}> Add more</i>
+                                        </div>
+                                        <div className="forow" id="priceWeight">
+                                            {formFields && formFields.map((form, index) => (
+                                                <>
+                                                    <div className="form-row" key={index}>
+                                                        <div className="col">
+                                                            <input type="number" className="form-control m-1" name='weight' value={form.weight} onChange={(e) => handleFormChange(e, index)} placeholder="Weight" />
+                                                        </div>
+                                                        <div className="col">
+                                                            <input type="number" className="form-control m-1" name='price' value={form.price} onChange={(e) => handleFormChange(e, index)} placeholder="Price" />
+                                                        </div>
+                                                        <div className="col">
+                                                            <input type="number" className="form-control m-1" name='quantity' value={form.quantity} onChange={(e) => handleFormChange(e, index)} placeholder="Quantity" />
+                                                        </div>
+                                                        <div className="col">
+                                                            <select className="form-control m-1" name='units' value={form.units} onChange={(e) => handleFormChange(e, index)} placeholder="Units" >
+                                                                <option >Unit</option>
+                                                                <option value="L">Ltr</option>
+                                                                <option value="g">grams</option>
+                                                                <option value="Kg">Kg</option>
+                                                                <option value="M">Meter</option>
+                                                                <option value="Ft">Ft</option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="col">
+                                                            <select className="form-control m-1" name='size' value={form.size} onChange={(e) => handleFormChange(e, index)} placeholder="Size" >
+                                                                <option >Size</option>
+                                                                <option value="S">Small</option>
+                                                                <option value="M">Medium</option>
+                                                                <option value="L">Large</option>
+                                                                <option value="XLarge">xLarge</option>
+                                                                <option value="XXL">XXL</option>
+                                                                <option value="xs">xsmall</option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="col m-auto">
+                                                            <i className='fa fa-times-circle  text-danger m-1 ' onClick={() => removeFields(index)} title='Delete Row'></i>
+
+                                                        </div>
+                                                    </div>
+
+                                                </>
+
+                                            ))}
                                         </div>
 
                                         <div className="form-group">

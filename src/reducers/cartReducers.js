@@ -9,12 +9,12 @@ export const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action)
         case ADD_TO_CART:
             const item = action.payload;
             console.log("Reducers.....", item)
-            const isItemExist = state.cartItems.find(i => i.id === item.id)
+            const isItemExist = state.cartItems.find(i => i.id === item.id && i.price === item.price)
 
             if (isItemExist) {
                 return {
                     ...state,
-                    cartItems: state.cartItems.map(i => i.id === isItemExist.id ? item : i)
+                    cartItems: state.cartItems.map(i => i.id === isItemExist.id && i.price === isItemExist.price ? item : i)
                 }
 
             } else {
@@ -26,7 +26,7 @@ export const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action)
         case REMOVE_ITEM_CART:
             return {
                 ...state,
-                cartItems: state.cartItems.filter(i => i.id !== action.payload)
+                cartItems: state.cartItems.filter(i => i.id !== action.payload && i.price !== action.payload.price)
             }
         case SAVE_SHIPPING_INFO:
             return {
